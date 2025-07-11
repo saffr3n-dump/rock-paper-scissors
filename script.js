@@ -1,65 +1,67 @@
-function playGame() {
-  const maxScore = 5;
+(() => {
+  const MAX_SCORE = 5;
+  const CHOICES = ['rock', 'paper', 'scissors'];
+
+  let round = 0;
   let humanScore = 0;
   let computerScore = 0;
-  let round = 0;
-  const choices = ['rock', 'paper', 'scissors'];
 
-  while (true) {
-    if (humanScore === maxScore || computerScore === maxScore) {
-      console.log(`Final score: ${getScoreMessage()}`);
-      return;
-    }
-    console.log(`Round ${++round}: ${getScoreMessage()}`);
-    const humanChoice = getHumanChoice();
+  const controls = document.querySelector('.controls');
+  const display = {
+    humanScore: document.querySelector('.humanScore'),
+    computerScore: document.querySelector('.computerScore'),
+    result: document.querySelector('.result'),
+  };
+
+  controls.addEventListener('click', gameLoop);
+
+  function gameLoop(e) {
+    if (e.target.tagName !== 'BUTTON') return;
+    const humanChoice = Number(e.target.getAttribute('data-id'));
     const computerChoice = getComputerChoice();
-    console.log(playRound(humanChoice, computerChoice));
+    playRound(humanChoice, computerChoice);
+    if (isWinnerDecided()) endGame();
   }
 
   function playRound(humanChoice, computerChoice) {
     const choiceDifference = humanChoice - computerChoice;
-    const result = (choiceDifference + (choices.length - 1)) % choices.length;
+    const result = (choiceDifference + (CHOICES.length - 1)) % CHOICES.length;
 
-    const humanChoiceMsg = `You chose ${choices[humanChoice]}.`;
-    const computerChoiceMsg = `Computer chose ${choices[computerChoice]}.`;
-    let winnerMsg;
+    const humanChoiceMsg = `You chose ${CHOICES[humanChoice]}.`;
+    const computerChoiceMsg = `Computer chose ${CHOICES[computerChoice]}.`;
+    let resultMsg;
 
     switch (result) {
       case 0:
-        humanScore++;
-        winnerMsg = 'You win!';
+        display.humanScore.textContent = ++humanScore;
+        resultMsg = 'You win!';
         break;
       case 1:
-        computerScore++;
-        winnerMsg = 'You lose!';
+        display.computerScore.textContent = ++computerScore;
+        resultMsg = 'You lose!';
         break;
       case 2:
-        winnerMsg = 'Tie!';
+        resultMsg = 'Tie!';
         break;
     }
 
-    return `${humanChoiceMsg} ${computerChoiceMsg} ${winnerMsg}`;
-  }
-
-  function getHumanChoice() {
-    while (true) {
-      const choice = prompt('Select rock, paper or scissors.')?.toLowerCase();
-      switch (choice) {
-        case 'r': case 'rock'    : return 0;
-        case 'p': case 'paper'   : return 1;
-        case 's': case 'scissors': return 2;
-        default: continue;
-      }
-    }
+    display.result.textContent = `Round ${++round}: ${humanChoiceMsg} ${computerChoiceMsg} ${resultMsg}`;
   }
 
   function getComputerChoice() {
     return Math.floor(Math.random() * 3);
   }
 
-  function getScoreMessage() {
-    return `You ${humanScore} : ${computerScore} Computer`;
+  function isWinnerDecided() {
+    return humanScore === MAX_SCORE || computerScore === MAX_SCORE;
   }
-}
 
-playGame();
+  function endGame() {
+    controls.removeEventListener('click', gameLoop);
+    controls.innerHTML = '';
+    const reloadBtn = document.createElement('button');
+    reloadBtn.textContent = 'Try Again';
+    reloadBtn.onclick = () => window.location.reload();
+    controls.appendChild(reloadBtn);
+  }
+})();
