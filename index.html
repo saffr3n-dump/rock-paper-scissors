@@ -3,9 +3,26 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="./script.js"></script>
-    <title>Document</title>
+    <script src="./script.js" defer></script>
+    <title>Rock Paper Scissors</title>
   </head>
   <body>
+    <h1>Rock Paper Scissors</h1>
+    <p>The game keeps going until you or the computer reaches 5 points. Good luck!</p>
+    <div class="display">
+      <div class="score">
+        You
+        <span class="humanScore">0</span>
+        :
+        <span class="computerScore">0</span>
+        Computer
+      </div>
+      <div class="result">Make your choice to start!</div>
+    </div>
+    <div class="controls">
+      <button data-id="0">Rock</button>
+      <button data-id="1">Paper</button>
+      <button data-id="2">Scissors</button>
+    </div>
   </body>
 </html>
